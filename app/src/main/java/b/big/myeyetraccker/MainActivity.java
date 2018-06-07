@@ -1,11 +1,13 @@
 package b.big.myeyetraccker;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -18,6 +20,8 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 
 public class MainActivity extends Activity implements CameraBridgeViewBase.CvCameraViewListener2 {
+    Button bRes,wRes;
+    Boolean aRes=true;
 
     static {
 
@@ -52,11 +56,43 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         javaCameraView = findViewById(R.id.java_camera_view);
-        javaCameraView.setMaxFrameSize(640,480);
+        bRes = findViewById(R.id.bRes);
+        wRes = findViewById(R.id.wRes);
+
+          try {
+              Boolean accRes = getIntent().getExtras().getBoolean("aRes");
+              if(accRes){
+                  javaCameraView.setMaxFrameSize(640,480);
+              }else{
+                  javaCameraView.setMaxFrameSize(320,240);
+              }
+          }
+          catch (Exception e){
+              javaCameraView.setMaxFrameSize(320,240);
+          }
         javaCameraView.setVisibility(View.VISIBLE);
         javaCameraView.setCvCameraViewListener(this);
+        bRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = getIntent();
+                intent.putExtra("aRes", true);
+                finish();
+                startActivity(intent);
+
+            }
+        });
+        wRes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = getIntent();
+                intent.putExtra("aRes", false);
+                finish();
+                startActivity(intent);
+
+            }
+        });
 
     }
 
